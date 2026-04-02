@@ -1,92 +1,73 @@
 import { motion } from 'framer-motion';
-import { BrainCircuit, Map, Video, LineChart } from 'lucide-react';
+import { BrainCircuit, Video, LineChart, Map } from 'lucide-react';
+import { ShinyOverlay } from '../ui/ShinyOverlay'; // 👉 Import our new reusable effect!
 
 const features = [
-  {
-    title: "AI Skill Mapping",
-    description: "Our proprietary AI analyzes your academic history, hobbies, and natural aptitudes to suggest high-growth career paths.",
-    icon: BrainCircuit,
-    colSpan: "col-span-1 md:col-span-2", // Spans 2 columns on desktop
-    gradient: "from-blue-500/10 to-sky-400/10",
-    iconColor: "text-blue-500",
-  },
-  {
-    title: "Live Mentorship",
-    description: "Book 1-on-1 video sessions with vetted industry professionals.",
-    icon: Video,
-    colSpan: "col-span-1",
-    gradient: "from-green-500/10 to-emerald-400/10",
-    iconColor: "text-green-500",
-  },
-  {
-    title: "Parent Analytics",
-    description: "Keep track of milestones, session feedback, and career readiness scores in real-time.",
-    icon: LineChart,
-    colSpan: "col-span-1",
-    gradient: "from-purple-500/10 to-fuchsia-400/10",
-    iconColor: "text-purple-500",
-  },
-  {
-    title: "Dynamic Career Roadmaps",
-    description: "Stop guessing. Get a step-by-step visual roadmap from your current grade all the way to your first day on the job.",
-    icon: Map,
-    colSpan: "col-span-1 md:col-span-2",
-    gradient: "from-orange-500/10 to-amber-400/10",
-    iconColor: "text-orange-500",
-  }
+  { id: 1, title: 'AI Skill Mapping', desc: 'Our proprietary AI analyzes your academic history, hobbies, and natural aptitudes to suggest high-growth career paths.', icon: BrainCircuit, color: 'text-blue-500', bg: 'bg-blue-100' },
+  { id: 2, title: 'Live Mentorship', desc: 'Book 1-on-1 video sessions with vetted industry professionals to get real-world guidance and advice.', icon: Video, color: 'text-emerald-500', bg: 'bg-emerald-100' },
+  { id: 3, title: 'Parent Analytics', desc: 'Keep track of milestones, session feedback, and career readiness scores in real-time.', icon: LineChart, color: 'text-purple-500', bg: 'bg-purple-100' },
+  { id: 4, title: 'Dynamic Career Roadmaps', desc: 'Stop guessing. Get a step-by-step visual roadmap from your current grade all the way to your first day on the job.', icon: Map, color: 'text-orange-500', bg: 'bg-orange-100' },
 ];
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1, transition: { staggerChildren: 0.1, delayChildren: 0.2 } }
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 30 },
+  visible: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 400, damping: 30 } }
+};
 
 export default function Features() {
   return (
-    <section className="relative w-full py-24 px-6 lg:px-12 z-10">
+    <section className="relative w-full py-20 px-6 lg:px-12 z-10">
       <div className="max-w-7xl mx-auto">
         
-        {/* Header */}
         <div className="text-center mb-16">
           <motion.h2 
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.6 }}
             className="text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight mb-4"
           >
-            Everything you need for <br/>
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-sky-400">
-              Future Success
-            </span>
+            Everything you need for <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-sky-400">Future Success</span>
           </motion.h2>
         </div>
 
-        {/* Bento Box Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {features.map((feature, index) => {
+        <motion.div 
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-50px" }}
+          className="grid grid-cols-1 md:grid-cols-2 gap-6"
+        >
+          {features.map((feature) => {
             const Icon = feature.icon;
             return (
               <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-50px" }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                whileHover={{ scale: 0.98 }}
-                className={`relative bg-white/60 backdrop-blur-xl border border-white/80 rounded-3xl p-8 flex flex-col items-start transition-all overflow-hidden hover:shadow-xl hover:shadow-blue-500/5 ${feature.colSpan}`}
+                key={feature.id}
+                variants={itemVariants}
+                whileHover={{ scale: 1.02, y: -5 }} // Snappy lift
+                className="group relative bg-white/70 backdrop-blur-xl border border-white/80 rounded-3xl p-8 flex flex-col md:flex-row items-start gap-6 shadow-sm hover:shadow-xl transition-shadow duration-300 overflow-hidden cursor-pointer"
               >
-                {/* Soft background gradient inside the card */}
-                <div className={`absolute inset-0 bg-gradient-to-br ${feature.gradient} opacity-50`}></div>
+                {/* 👇 The magic drop-in shiny effect */}
+                <ShinyOverlay /> 
+                
+                <div className="relative z-10 flex-shrink-0">
+                  <div className={`w-14 h-14 rounded-2xl flex items-center justify-center ${feature.bg} group-hover:scale-110 transition-transform duration-300`}>
+                    <Icon size={28} className={feature.color} strokeWidth={2.5} />
+                  </div>
+                </div>
                 
                 <div className="relative z-10">
-                  <div className={`w-12 h-12 rounded-full bg-white flex items-center justify-center shadow-sm mb-6 ${feature.iconColor}`}>
-                    <Icon size={24} strokeWidth={2.5} />
-                  </div>
-                  <h3 className="text-2xl font-bold text-slate-800 mb-3">{feature.title}</h3>
-                  <p className="text-slate-600 leading-relaxed font-medium">
-                    {feature.description}
-                  </p>
+                  <h3 className="text-xl font-bold text-slate-800 mb-2">{feature.title}</h3>
+                  <p className="text-slate-600 leading-relaxed font-medium">{feature.desc}</p>
                 </div>
               </motion.div>
             );
           })}
-        </div>
+        </motion.div>
 
       </div>
     </section>

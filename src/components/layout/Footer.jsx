@@ -1,3 +1,6 @@
+import React from 'react';
+import { TrendingUp } from 'lucide-react';
+
 export default function Footer() {
   return (
     <footer className="relative z-10 w-full pt-16 pb-8 px-6 lg:px-12 border-t border-white/40 bg-white/10 backdrop-blur-sm mt-12">
@@ -5,7 +8,10 @@ export default function Footer() {
         
         {/* Logo Placeholder */}
         <div className="flex items-center gap-2">
-          <span className="text-3xl">🤖</span>
+          {/* Added TrendingUp icon to match the branding on the Sign In / Sign Up pages */}
+          <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-sky-400 rounded-lg flex items-center justify-center shadow-md shadow-blue-500/20">
+            <TrendingUp className="text-white w-4 h-4" strokeWidth={2.5} />
+          </div>
           <span className="text-xl font-extrabold text-slate-800 tracking-tight">Harmony & Chapters</span>
         </div>
 

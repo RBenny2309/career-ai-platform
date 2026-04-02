@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Mail, Lock, User, ArrowLeft } from 'lucide-react';
+import { Mail, Lock, User, ArrowLeft, TrendingUp } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import CloudBackground from '../components/layout/CloudBackground';
 import { registerUser } from '../services/api/authApi';
@@ -35,7 +35,7 @@ export default function SignUp() {
         to="/signin"
         className="absolute top-8 left-8 z-20 flex items-center text-sm font-bold text-slate-500 hover:text-[#3b82f6] transition-colors cursor-pointer bg-white/50 backdrop-blur-md px-4 py-2 rounded-full shadow-sm"
       >
-        <ArrowLeft size={16} className="mr-2" />
+        < ArrowLeft size={16} className="mr-2" />
         Back to Sign In
       </Link>
 
@@ -47,7 +47,7 @@ export default function SignUp() {
       >
         <div className="flex items-center gap-3 mb-8">
           <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-sky-400 rounded-2xl flex items-center justify-center shadow-lg shadow-blue-500/30">
-            <span className="text-white text-2xl">🤖</span>
+            <TrendingUp className="text-white w-6 h-6" strokeWidth={2.5} />
           </div>
           <span className="text-3xl font-extrabold tracking-tight text-slate-800">AI Career Path</span>
         </div>
@@ -142,6 +142,26 @@ export default function SignUp() {
           </Link>
         </p>
       </motion.div>
+
+      {/* ========================================= */}
+      {/* RIGHT SIDE: Animated Robo Mascot          */}
+      {/* ========================================= */}
+      <div className="hidden lg:flex flex-1 relative items-center justify-center z-10 pointer-events-none pl-12">
+        <motion.div
+          animate={{ y: [-15, 15, -15] }}
+          transition={{ repeat: Infinity, duration: 6, ease: "easeInOut" }}
+          className="relative w-full flex justify-center items-center"
+        >
+          <img
+            src="/public/robo.png"
+            alt="AI Mascot"
+            className="w-full max-w-[400px] xl:max-w-[500px] object-contain -scale-x-100"
+            style={{
+              filter: 'drop-shadow(0 25px 35px rgba(0,0,0,0.15)) hue-rotate(210deg) saturate(1.2)'
+            }}
+          />
+        </motion.div>
+      </div>
     </div>
   );
 }

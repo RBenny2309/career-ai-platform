@@ -8,7 +8,7 @@ export function SkyBackground() {
       <div 
         className="absolute inset-0 w-full h-full bg-cover bg-center bg-no-repeat"
         style={{ 
-          backgroundImage: "url('https://api.vcodinator.com/storage/v1/object/public/vovy_assets/skybgmain.png')" 
+          backgroundImage: "url('/clud-bg.webp')" 
         }}
       />
       
@@ -16,7 +16,7 @@ export function SkyBackground() {
       <div 
         className="absolute inset-0 w-full h-full bg-cover bg-bottom bg-no-repeat mix-blend-normal animate-float-slow"
         style={{ 
-          backgroundImage: "url('https://www.vovy.ai/cloud.png')" 
+          backgroundImage: "url('/cloud.png')" 
         }}
       />
 
@@ -24,7 +24,7 @@ export function SkyBackground() {
       <div 
         className="absolute inset-0 w-full h-full bg-cover bg-bottom bg-no-repeat opacity-50 mix-blend-overlay animate-float-slower scale-110"
         style={{ 
-          backgroundImage: "url('https://www.vovy.ai/cloud.png')" 
+          backgroundImage: "url('/cloud.png')" 
         }}
       />
 

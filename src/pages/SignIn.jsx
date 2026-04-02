@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Mail, Lock, User, ArrowLeft } from 'lucide-react';
+import { Mail, Lock, ArrowLeft, TrendingUp } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import CloudBackground from '../components/layout/CloudBackground';
 import { loginUser } from '../services/api/authApi';
@@ -63,7 +63,7 @@ export default function SignIn() {
       >
         <div className="flex items-center gap-3 mb-8">
           <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-sky-400 rounded-2xl flex items-center justify-center shadow-lg shadow-blue-500/30">
-            <span className="text-white text-2xl">🤖</span>
+            <TrendingUp className="text-white w-6 h-6" strokeWidth={2.5} />
           </div>
           <span className="text-3xl font-extrabold tracking-tight text-slate-800">
             AI Career Path

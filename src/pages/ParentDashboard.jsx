@@ -12,6 +12,9 @@ import { mentorshipApi } from '../services/api/mentorshipApi';
 import { parentStudentApi } from '../services/api/parentStudentApi';
 import { roadmapApi } from '../services/api/roadmapApi';
 
+// 👉 Premium animations imported correctly
+import { SplitText, BlurText, ShinyOverlay } from "../components/ui/Animations";
+
 const IMPORTANCE_META = {
   CRITICAL:       { label: 'Critical',        bg: 'bg-rose-50',    text: 'text-rose-700',    border: 'border-rose-200',    gradient: 'from-rose-500 to-pink-400' },
   STRATEGIC:      { label: 'Strategic',       bg: 'bg-amber-50',   text: 'text-amber-700',   border: 'border-amber-200',   gradient: 'from-amber-500 to-orange-400' },
@@ -27,8 +30,8 @@ const TABS = [
 
 function NavItem({ icon: Icon, label, active, onClick }) {
   return (
-    <button onClick={onClick} className={`group flex items-center w-full px-4 py-3 rounded-xl transition-all font-semibold text-left ${active ? 'bg-purple-50 text-purple-600' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800'}`}>
-      <Icon size={20} className={`mr-3 shrink-0 transition-transform ${!active && 'group-hover:scale-110'}`} /> {label}
+    <button onClick={onClick} className={`group flex items-center w-full px-4 py-3 rounded-xl transition-all font-semibold text-left ${active ? 'bg-purple-50 text-purple-600' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800 hover:translate-x-1 duration-300'}`}>
+      <Icon size={20} className={`mr-3 shrink-0 transition-transform duration-300 ${!active && 'group-hover:scale-110'}`} /> {label}
     </button>
   );
 }
@@ -51,28 +54,41 @@ function Toast({ message, type, onClose }) {
 }
 
 // ── OVERVIEW TAB ──────────────────────────────────────────────────────────────
-function OverviewTab({ linkedStudent, navigate }) {
-  const isLinked = !!linkedStudent;
+function OverviewTab({ linkedStudentId, navigate }) {
+  const isLinked = !!linkedStudentId;
+  const springTransition = { type: "spring", stiffness: 400, damping: 30 };
 
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-          className="md:col-span-2 bg-gradient-to-br from-purple-600 to-fuchsia-500 rounded-3xl p-8 text-white relative overflow-hidden shadow-lg shadow-purple-500/20"
+        
+        {/* Main Purple Card */}
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }} 
+          animate={{ opacity: 1, y: 0 }}
+          whileHover={{ scale: 1.01, y: -4 }}
+          transition={springTransition}
+          className="group md:col-span-2 bg-gradient-to-br from-purple-600 to-fuchsia-500 rounded-3xl p-8 text-white relative overflow-hidden shadow-lg hover:shadow-2xl transition-shadow duration-300"
         >
+          <ShinyOverlay />
           <div className="absolute top-0 right-0 w-56 h-56 bg-white/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
           <div className="relative z-10">
             <span className="px-3 py-1 bg-white/20 backdrop-blur-md rounded-full text-xs font-bold uppercase tracking-wider mb-5 inline-block border border-white/30">
               {isLinked ? '✅ Child Account Linked' : '🔗 Link Your Child\'s Account'}
             </span>
-            <h2 className="text-2xl font-extrabold mb-2">
-              {isLinked ? `Track ${linkedStudent.full_name}'s AI career journey` : 'Connect to your child\'s account'}
-            </h2>
-            <p className="text-purple-100 font-medium max-w-lg mb-6">
-              {isLinked
-                ? 'You have full visibility into your child\'s career roadmap, assessments, and AI recommendations. Provide feedback to personalise their journey further.'
-                : 'Link to your child\'s Harmony account using their unique invite code. Once linked, you\'ll see their complete career path and can provide feedback.'}
-            </p>
+            
+            <BlurText 
+              text={isLinked ? 'Track your child\'s AI career journey' : 'Connect to your child\'s account'} 
+              className="text-2xl font-extrabold mb-2 block" 
+            />
+            <BlurText 
+              text={isLinked 
+                ? 'You have full visibility into your child\'s career roadmap, assessments, and AI recommendations. Provide feedback to personalise their journey further.' 
+                : 'Link to your child\'s Harmony account using their unique invite code. Once linked, you\'ll see their complete career path and can provide feedback.'} 
+              delay={0.2} 
+              className="text-purple-100 font-medium max-w-lg mb-6 block" 
+            />
+
             <div className="flex gap-3 flex-wrap">
               {isLinked ? (
                 <>
@@ -96,6 +112,7 @@ function OverviewTab({ linkedStudent, navigate }) {
           </div>
         </motion.div>
 
+        {/* Small Status Cards */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
           className="bg-white rounded-3xl p-6 border border-slate-100 shadow-sm space-y-4 flex flex-col justify-center"
         >
@@ -132,17 +149,23 @@ function OverviewTab({ linkedStudent, navigate }) {
             return (
               <motion.button
                 key={i}
-                initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 + i * 0.05 }}
-                onClick={() => window.dispatchEvent(new CustomEvent('switchTab', { detail: item.tab }))}
-                className="bg-white rounded-3xl border border-slate-100 shadow-sm p-6 text-left hover:border-purple-200 hover:-translate-y-1 hover:shadow-md transition-all duration-300 group"
+                initial={{ opacity: 0, y: 20 }} 
+                animate={{ opacity: 1, y: 0 }} 
+                whileHover={{ scale: 1.02, y: -8 }} 
+                transition={{ delay: 0.1 + i * 0.05, ...springTransition }}
+                onClick={() => item.path ? navigate(item.path) : window.dispatchEvent(new CustomEvent('switchTab', { detail: item.tab }))}
+                className="group relative bg-white rounded-3xl border border-slate-100 shadow-sm p-6 text-left hover:shadow-xl transition-shadow duration-300 overflow-hidden"
               >
-                <div className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${item.color} flex items-center justify-center mb-4 shadow-sm group-hover:scale-110 transition-transform duration-300`}>
-                  <Icon size={22} className="text-white" />
-                </div>
-                <p className="font-extrabold text-slate-800 mb-1">{item.label}</p>
-                <p className="text-sm text-slate-500 font-medium">{item.desc}</p>
-                <div className="flex items-center gap-1 mt-3 text-xs font-bold text-purple-600">
-                  Open <ChevronRight size={14} className="group-hover:translate-x-1 transition-transform" />
+                <ShinyOverlay />
+                <div className="relative z-10">
+                  <div className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${item.color} flex items-center justify-center mb-4 shadow-sm group-hover:scale-110 transition-transform duration-300`}>
+                    <Icon size={22} className="text-white" />
+                  </div>
+                  <p className="font-extrabold text-slate-800 mb-1">{item.label}</p>
+                  <p className="text-sm text-slate-500 font-medium">{item.desc}</p>
+                  <div className="flex items-center gap-1 mt-3 text-xs font-bold text-purple-600">
+                    Open <ChevronRight size={14} className="group-hover:translate-x-1 transition-transform" />
+                  </div>
                 </div>
               </motion.button>
             );
@@ -213,9 +236,12 @@ function LinkTab({ linkedStudent, onLinked, toast }) {
 
   return (
     <div className="max-w-lg space-y-6">
-      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-        className="bg-gradient-to-br from-purple-600 to-fuchsia-500 rounded-3xl p-7 text-white relative overflow-hidden"
+      {/* Instructions */}
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
+        className="group bg-gradient-to-br from-purple-600 to-fuchsia-500 rounded-3xl p-7 text-white relative overflow-hidden shadow-md"
       >
+        <ShinyOverlay />
         <div className="absolute top-0 right-0 w-40 h-40 bg-white/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/4" />
         <div className="relative z-10">
           <h3 className="text-xl font-extrabold mb-3">How to link your child's account</h3>
@@ -340,15 +366,18 @@ function RoadmapTab({ linkedStudent }) {
 
   return (
     <div className="max-w-3xl space-y-6">
-      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-        className="bg-gradient-to-br from-purple-600 to-fuchsia-500 rounded-3xl p-8 text-white relative overflow-hidden"
+      {/* Hero */}
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
+        className="group bg-gradient-to-br from-purple-600 to-fuchsia-500 rounded-3xl p-8 text-white relative overflow-hidden shadow-md"
       >
+        <ShinyOverlay />
         <div className="absolute top-0 right-0 w-56 h-56 bg-white/10 rounded-full blur-3xl -translate-y-1/4 translate-x-1/4" />
         <div className="relative z-10">
           <span className="px-3 py-1 bg-white/20 rounded-full text-xs font-bold uppercase tracking-wider mb-4 inline-block border border-white/30">
             {linkedStudent.full_name}'s Career Path
           </span>
-          <h2 className="text-3xl font-extrabold mb-3">{roadmap.title}</h2>
+          <BlurText text={roadmap.career_title} className="text-3xl font-extrabold mb-3 block" />
           <div className="flex flex-wrap gap-3">
              <div className="flex items-center gap-2 bg-white/20 backdrop-blur-sm rounded-xl px-3 py-2 border border-white/30 text-sm font-bold">
                 <Target size={14} /> Status: {roadmap.status}
@@ -447,7 +476,15 @@ function FeedbackTab({ linkedStudent, toast }) {
 
   return (
     <div className="max-w-xl space-y-6">
-      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
+      {!linkedStudentId && (
+        <div className="flex items-center gap-3 bg-amber-50 border border-amber-200 rounded-2xl px-5 py-4">
+          <AlertCircle size={18} className="text-amber-500 shrink-0" />
+          <p className="text-sm font-semibold text-amber-700">Link your child's account first before submitting feedback.</p>
+        </div>
+      )}
+
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
         className="bg-gradient-to-br from-purple-50 to-fuchsia-50 border border-purple-100 rounded-3xl p-6"
       >
         <div className="flex items-start gap-3">
@@ -575,10 +612,18 @@ export default function ParentDashboard() {
       </aside>
 
       <main className="flex-1 md:ml-64 p-6 md:p-8">
+        
+        {/* 👈 UPDATED HEADER */}
         <header className="flex justify-between items-center mb-8">
           <div>
-            <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">Hello, {name}! 👋</h1>
-            <p className="text-slate-500 font-medium mt-1">{TABS.find(t => t.id === activeTab)?.label}</p>
+            <div className="text-3xl md:text-4xl font-extrabold text-slate-900 tracking-tight flex flex-wrap pb-2">
+              <SplitText text={`Hello, ${name}! `} delay={0.03} />
+            </div>
+            <BlurText
+              text={TABS.find(t => t.id === activeTab)?.label || 'Overview'}
+              delay={0.4}
+              className="text-slate-500 font-medium mt-1 block"
+            />
           </div>
           <div className="flex items-center gap-3">
             <button className="relative p-2.5 bg-white border border-slate-200 rounded-full hover:bg-slate-50 shadow-sm transition-colors">

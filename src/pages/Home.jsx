@@ -1,4 +1,7 @@
 import React from 'react';
+import { motion } from 'framer-motion';
+
+// Component Imports
 import CloudBackground from '../components/layout/CloudBackground';
 import Hero from '../components/sections/Hero'; 
 import AppShowcase from '../components/sections/AppShowcase'; 
@@ -8,33 +11,49 @@ import Footer from '../components/layout/Footer';
 
 export default function Home() {
   return (
-    <div className="relative min-h-screen bg-[#f0f9ff] overflow-x-hidden text-slate-900">
+    <div className="relative min-h-screen bg-[#f0f9ff] overflow-x-hidden text-slate-900 font-sans">
       
       {/* FIXED CLOUD BACKGROUND */}
       <div className="fixed inset-0 z-0 pointer-events-none">
         <CloudBackground />
       </div>
 
-      {/* SCROLLING CONTENT */}
       <div className="relative z-10 flex flex-col w-full">
         
-        {/* HERO SECTION */}
-        <section className="min-h-screen flex flex-col justify-center pt-20 pb-0">
+        {/* HERO SECTION - Animated on page load */}
+        <motion.section 
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          className="min-h-screen flex flex-col justify-center pt-16 md:pt-24 pb-0"
+        >
           <Hero />
-        </section>
+        </motion.section>
 
-        {/* INTERACTIVE TOGGLE SHOWCASE */}
-        <AppShowcase />
+        {/* INTERACTIVE TOGGLE SHOWCASE - Animated when scrolled into view */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.6 }}
+        >
+          <AppShowcase />
+        </motion.div>
 
-        {/* REST OF YOUR PAGE CONTENT */}
-        {/* THE FIX: Added -mt-16 (mobile) and lg:-mt-48 (desktop) to yank this whole section UP and eat the gap! */}
-        <section className="relative z-20 w-full max-w-7xl mx-auto px-6 -mt-16 lg:-mt-48 pb-20 flex flex-col gap-12 lg:gap-24">
+        {/* MAIN CONTENT SECTION - Staggered slide up */}
+        <motion.section 
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.7, delay: 0.2 }}
+          className="relative z-20 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-16 md:-mt-32 lg:-mt-48 pb-16 md:pb-24 flex flex-col gap-12 md:gap-16 lg:gap-24"
+        >
           <RoleSelection />
           <Features />
-        </section>
+        </motion.section>
         
         {/* FOOTER */}
-        <div className="relative z-20 w-full">
+        <div className="relative z-20 w-full mt-auto">
           <Footer />
         </div>
 
