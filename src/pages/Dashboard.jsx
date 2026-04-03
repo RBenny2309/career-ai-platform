@@ -49,12 +49,12 @@ function useUserProgress() {
       (userData?.progress?.personality_done ?? false) &&
       (userData?.progress?.aptitude_done ?? false),
     personalityData: userData?.personality_data ?? null,
-    aptiData: userData?.apti_data ?? null,
+    // UPDATE: Drill down into .scores object from your JSON
+    aptiData: userData?.apti_data?.scores ?? null, 
   };
 
   return { progress, loading, refetch: fetchUserData };
 }
-
 function NavItem({ icon: Icon, label, active, onClick }) {
   return (
     <button
@@ -139,10 +139,12 @@ function PersonalityCompletedCard({ personalityData }) {
 
 // Completed test card for aptitude
 function AptitudeCompletedCard({ aptiData }) {
+  // Mapping keys based on your specific JSON response
   const q = aptiData?.quantitative ?? 0;
   const l = aptiData?.logical ?? 0;
   const v = aptiData?.verbal ?? 0;
-  const max = aptiData?.max_score ?? 15;
+  const max = aptiData?.max_score ?? 5; // Updated default to 5 based on your data
+
   return (
     <div className="flex-1 bg-white rounded-3xl border border-emerald-200 p-6 shadow-sm">
       <div className="flex items-center gap-3 mb-3">
@@ -163,7 +165,6 @@ function AptitudeCompletedCard({ aptiData }) {
     </div>
   );
 }
-
 function ActiveRoadmap() {
   const navigate = useNavigate();
   return (
